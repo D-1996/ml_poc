@@ -3,18 +3,18 @@ from torch import Tensor
 from torchvision import transforms
 from PIL.Image import Image as ImageType
 from PIL import Image
-from typing import TypeVar
+from typing import TypeVar, Generic, Callable
 
 
-T = TypeVar('T')
+DType = TypeVar('DType')
 
-class BaseDataTransformer(ABC):
+class BaseDataTransformer(ABC, Generic[DType]):
     @abstractmethod
-    def transform(self, T) -> Tensor:
+    def transform(self, data: DType) -> Tensor:
         ...
 
 
-class CatsDogsDataTransformer(BaseDataTransformer):
+class CatsDogsDataTransformer(BaseDataTransformer[ImageType]):
     def __init__(self) -> None: #cfg path and some cfg to create those below + some piping %>
         self.transformations = transforms.Compose(
             [
@@ -29,4 +29,5 @@ class CatsDogsDataTransformer(BaseDataTransformer):
         )
 
     def transform(self, image: ImageType) -> Tensor:
-        return self.transformations(image)[None, :, :, :]
+        transformed_image =  self.transformations(image)
+        return Tensor(transformed_image[None, :, :, :])

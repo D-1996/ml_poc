@@ -7,11 +7,11 @@ from model_server.ml_components.transformers import CatsDogsDataTransformer
 
 __all__ = ["preprocessor", "model"]
 
-model_path = Path(
+MODEL_PATH = Path(
     "/Users/damiandymkowski/Documents/Personal/cat_dog_fastapi/model_server/resources/model_26032023.pth"
 )
 
-model = CatsDogsVisionModel(model_path)
+model = CatsDogsVisionModel(MODEL_PATH)
 loader = CatsDogsImageLoader()
 data_transformer = CatsDogsDataTransformer()
 preprocessor = CatsDogsImagePreprocessor(

@@ -27,10 +27,11 @@ class CatsDogsVisionModel:
                 f"Path: {path} does not exist or the file has incorrect extension. Expected: {CatsDogsVisionModel.MODEL_EXTENSION}"
             )
 
-        return torch.load(path, map_location=map_location)
-
+        
+        loaded = dict(torch.load(path, map_location=map_location))
+        return loaded
     @staticmethod
-    def _get_model_structure() -> DenseNet:
+    def _get_model_architecture() -> DenseNet:
         model = MODELS.densenet121(pretrained=False)
         model.classifier = nn.Sequential(
             nn.Linear(1024, 512),
@@ -45,20 +46,20 @@ class CatsDogsVisionModel:
         return model
 
     def load_model(self) -> DenseNet:
-        model = self._get_model_structure()
+        model = self._get_model_architecture()
         model.parameters = self._model_weights["parameters"]
         model.load_state_dict(self._model_weights["state_dict"])
         model.eval()
         return model
 
     @staticmethod
-    def _tensor_to_dict(tensor: torch.Tensor) -> dict[str, float]:
+    def _tensor_to_dict(tensor: torch.Tensor) -> dict[int, float]:
         values, indices = torch.topk(tensor, k=2)
         values = values.tolist()[0]
         indices = indices.tolist()[0]
         return dict(zip(indices, values))
 
-    def predict(self, input_data: torch.Tensor) -> dict[str, float]:
+    def predict(self, input_data: torch.Tensor) -> dict[CatsDogsClass, float]:
         result = torch.exp(self.model(input_data))
         result_dict = self._tensor_to_dict(result)
         return {v: result_dict[k] for k, v in CatsDogsVisionModel.CLASS_MAPPING.items()}

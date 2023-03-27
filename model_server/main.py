@@ -14,13 +14,13 @@ app = FastAPI()
 
 
 @app.get("/health")
-async def health_check():
+async def health_check() -> dict[str, str]:
     return {"hello": "wrld"}
 
 from typing import Type
 @app.post("/predict")
 async def predict(image: UploadFile) -> ModelPrediction:
-    img: bytes = image.file.read()
+    img = image.file.read()
     preprocessed_img = preprocessor.preprocess(img)
     prediction = model.predict(preprocessed_img)
     return ModelPrediction(
