@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
+from typing import Callable, Generic, TypeVar
+
+from PIL import Image
+from PIL.Image import Image as ImageType
 from torch import Tensor
 from torchvision import transforms
-from PIL.Image import Image as ImageType
-from PIL import Image
-from typing import TypeVar, Generic, Callable
 
+DType = TypeVar("DType")
 
-DType = TypeVar('DType')
 
 class BaseDataTransformer(ABC, Generic[DType]):
     @abstractmethod
@@ -15,7 +16,9 @@ class BaseDataTransformer(ABC, Generic[DType]):
 
 
 class CatsDogsDataTransformer(BaseDataTransformer[ImageType]):
-    def __init__(self) -> None: #cfg path and some cfg to create those below + some piping %>
+    def __init__(
+        self,
+    ) -> None:  # cfg path and some cfg to create those below + some piping %>
         self.transformations = transforms.Compose(
             [
                 transforms.Resize(255),
@@ -29,5 +32,5 @@ class CatsDogsDataTransformer(BaseDataTransformer[ImageType]):
         )
 
     def transform(self, image: ImageType) -> Tensor:
-        transformed_image =  self.transformations(image)
+        transformed_image = self.transformations(image)
         return Tensor(transformed_image[None, :, :, :])

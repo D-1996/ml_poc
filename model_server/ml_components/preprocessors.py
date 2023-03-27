@@ -1,16 +1,24 @@
 from abc import ABC, abstractmethod
-from typing import Any, TypeVar, Type, Generic
-from torch import Tensor
-from model_server.ml_components.loaders import BaseLoader, CatsDogsImageLoader
-from model_server.ml_components.transformers import BaseDataTransformer, CatsDogsDataTransformer
+from typing import Any, Generic, Type, TypeVar
+
 from PIL.Image import Image as ImageType
+from torch import Tensor
 
-DType = TypeVar('DType')
-LoaderDType = TypeVar('LoaderDType')
-LoaderOutputDType = TypeVar('LoaderOutputDType')
-TransformerDType = TypeVar('TransformerDType')
+from model_server.ml_components.loaders import BaseLoader, CatsDogsImageLoader
+from model_server.ml_components.transformers import (
+    BaseDataTransformer,
+    CatsDogsDataTransformer,
+)
 
-class BasePreprocessor(ABC, Generic[DType, LoaderDType, LoaderOutputDType, TransformerDType]):
+DType = TypeVar("DType")
+LoaderDType = TypeVar("LoaderDType")
+LoaderOutputDType = TypeVar("LoaderOutputDType")
+TransformerDType = TypeVar("TransformerDType")
+
+
+class BasePreprocessor(
+    ABC, Generic[DType, LoaderDType, LoaderOutputDType, TransformerDType]
+):
     def __init__(
         self,
         loader: BaseLoader[LoaderDType, LoaderOutputDType],

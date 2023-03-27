@@ -17,7 +17,10 @@ app = FastAPI()
 async def health_check() -> dict[str, str]:
     return {"hello": "wrld"}
 
+
 from typing import Type
+
+
 @app.post("/predict")
 async def predict(image: UploadFile) -> ModelPrediction:
     img = image.file.read()

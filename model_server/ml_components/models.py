@@ -27,9 +27,9 @@ class CatsDogsVisionModel:
                 f"Path: {path} does not exist or the file has incorrect extension. Expected: {CatsDogsVisionModel.MODEL_EXTENSION}"
             )
 
-        
         loaded = dict(torch.load(path, map_location=map_location))
         return loaded
+
     @staticmethod
     def _get_model_architecture() -> DenseNet:
         model = MODELS.densenet121(pretrained=False)

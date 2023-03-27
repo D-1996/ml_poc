@@ -1,12 +1,12 @@
 import io
+from abc import ABC, abstractmethod
+from typing import Generic, Type, TypeVar
+
 from PIL import Image
 from PIL.Image import Image as ImageType
-from abc import ABC, abstractmethod
-from typing import TypeVar, Type, Generic
 
-
-DType = TypeVar('DType')
-OutputDType = TypeVar('OutputDType')
+DType = TypeVar("DType")
+OutputDType = TypeVar("OutputDType")
 
 
 class BaseLoader(ABC, Generic[DType, OutputDType]):
