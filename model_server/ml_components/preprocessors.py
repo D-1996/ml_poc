@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Generic, Type, TypeVar
+from typing import Generic, TypeVar
 
 from PIL.Image import Image as ImageType
 from torch import Tensor

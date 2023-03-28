@@ -1,7 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Callable, Generic, TypeVar
+from typing import Generic, TypeVar
 
-from PIL import Image
 from PIL.Image import Image as ImageType
 from torch import Tensor
 from torchvision import transforms

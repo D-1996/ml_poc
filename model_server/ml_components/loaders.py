@@ -1,6 +1,6 @@
 import io
 from abc import ABC, abstractmethod
-from typing import Generic, Type, TypeVar
+from typing import Generic, TypeVar
 
 from PIL import Image
 from PIL.Image import Image as ImageType

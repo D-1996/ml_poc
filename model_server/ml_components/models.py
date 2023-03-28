@@ -24,7 +24,8 @@ class CatsDogsVisionModel:
     def _load_weights(path: Path, map_location: str = "cpu") -> dict[str, Any]:
         if not path.exists() or path.suffix != CatsDogsVisionModel.MODEL_EXTENSION:
             raise ValueError(
-                f"Path: {path} does not exist or the file has incorrect extension. Expected: {CatsDogsVisionModel.MODEL_EXTENSION}"
+                f"Path: {path} does not exist or the file has incorrect extension."
+                f" Expected: {CatsDogsVisionModel.MODEL_EXTENSION}"
             )
 
         loaded = dict(torch.load(path, map_location=map_location))
