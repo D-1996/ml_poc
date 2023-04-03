@@ -7,7 +7,7 @@ from torch import nn
 from torchvision import models as MODELS
 from torchvision.models.densenet import DenseNet
 
-from model_server.ml_components.enums import CatsDogsClass
+from src.worker.ml_components.enums import CatsDogsClass
 
 warnings.filterwarnings("ignore")
 

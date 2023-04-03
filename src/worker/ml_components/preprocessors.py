@@ -4,11 +4,9 @@ from typing import Generic, TypeVar
 from PIL.Image import Image as ImageType
 from torch import Tensor
 
-from model_server.ml_components.loaders import BaseLoader, CatsDogsImageLoader
-from model_server.ml_components.transformers import (
-    BaseDataTransformer,
-    CatsDogsDataTransformer,
-)
+from src.worker.ml_components.loaders import BaseLoader, CatsDogsImageLoader
+from src.worker.ml_components.transformers import (BaseDataTransformer,
+                                                   CatsDogsDataTransformer)
 
 DType = TypeVar("DType")
 LoaderDType = TypeVar("LoaderDType")
