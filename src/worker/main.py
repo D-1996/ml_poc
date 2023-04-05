@@ -1,25 +1,12 @@
 import asyncio
-import base64
-from pathlib import Path
-from uuid import uuid4
+from functools import partial
 
-import aio_pika
-from aio_pika import IncomingMessage
+from aio_pika.robust_queue import RobustQueue
 from fastapi import FastAPI
-from pydantic import BaseModel, BaseSettings
 
-from src.common.common import Settings, settings, setup_rabbitmq
-from src.worker.ml_components import model, preprocessor
-
-
-class ModelPrediction(BaseModel):
-    cat: float
-    dog: float
-
-
-class PendingClassification(BaseModel):
-    inference_id: str
-
+from src.common.common import settings, setup_rabbitmq
+from src.common.database import get_mongo_db
+from src.worker.service import InferenceWorkerService
 
 app = FastAPI()
 
@@ -38,15 +25,9 @@ async def shutdown_event() -> None:
     await app.state.rbmq_connection.close()
 
 
-async def on_message(message: IncomingMessage) -> ModelPrediction:
-    async with message.process():
-        img = base64.b64decode(message.body)
-        preprocessed_img = preprocessor.preprocess(img)
-        prediction = model.predict(preprocessed_img)
-        print(message.properties.headers["request_id"])
-        print(prediction)
-        message.ack()
-
-
-async def infer(queue) -> None:
-    await queue.consume(callback=on_message)
+async def infer(queue: RobustQueue) -> None:
+    collection = "INFERENCE_COL"
+    mongo_db = await get_mongo_db()
+    worker_service = InferenceWorkerService(database=mongo_db)
+    on_message_callback = partial(worker_service.on_message, collection_name=collection)
+    await queue.consume(callback=on_message_callback)

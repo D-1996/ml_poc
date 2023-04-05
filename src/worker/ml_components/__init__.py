@@ -8,7 +8,7 @@ from src.worker.ml_components.transformers import CatsDogsDataTransformer
 __all__ = ["preprocessor", "model"]
 
 MODEL_PATH = Path(
-    "/Users/damiandymkowski/Documents/Personal/cat_dog_fastapi/src/worker/resources/model_26032023.pth"  # noqa
+    "/Users/damiandymkowski/Desktop/Code/Personal/cat_dog_fastapi/src/worker/resources/model_26032023.pth"  # noqa
 )
 
 model = CatsDogsVisionModel(MODEL_PATH)
