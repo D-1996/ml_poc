@@ -1,8 +1,12 @@
-from fastapi import FastAPI, UploadFile
+from typing import AsyncGenerator
+
+from fastapi import Depends, FastAPI, UploadFile
 
 from src.common.common import Settings, settings, setup_rabbitmq
+from src.common.database import get_mongo_db
 from src.server.schemas import PendingClassification
 from src.server.service import InferenceService
+from src.common.schemas import InferenceResult
 
 settings = Settings()
 app = FastAPI()
@@ -27,3 +31,14 @@ async def predict(image: UploadFile) -> PendingClassification:
     )
     inference_request_id = await inference_service.send_inference_request(image)
     return PendingClassification(inference_request_id=inference_request_id)
+
+
+@app.get("/result")
+async def result(
+    inference_request_id: str, db: AsyncGenerator = Depends(get_mongo_db)
+) -> InferenceResult:
+    results = await db.find_one(
+        settings.MONGO_INFERENCE_COLLECTION,
+        {"inference_request_id": {"$eq": inference_request_id}},
+    )
+    return results

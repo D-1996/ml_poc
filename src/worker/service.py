@@ -8,12 +8,13 @@ from src.worker.ml_components import model, preprocessor
 from src.worker.ml_components.enums import CatsDogsClass
 from src.worker.schemas import InferenceResult, ModelPrediction
 
+
 class InferenceWorkerService:
     def __init__(self, database: MongoDBDataAccess) -> None:
         self.database = database
 
     @staticmethod
-    async def get_prediction_from_message(message: IncomingMessage) -> InferenceResult:
+    def get_prediction_from_message(message: IncomingMessage) -> InferenceResult:
         img = base64.b64decode(message.body)
         inference_id = str(uuid4())
         preprocessed_img = preprocessor.preprocess(img)
@@ -28,7 +29,6 @@ class InferenceWorkerService:
 
     async def on_message(self, message: IncomingMessage, collection_name: str):
         async with message.process():
-            result = await self.get_prediction_from_message(message)
-            res = await self.database.insert_one(collection_name, result.dict())
+            result = self.get_prediction_from_message(message)
+            await self.database.insert_one(collection_name, result.dict())
             message.ack()
-            print(f"inserted to mongo :) {res}")

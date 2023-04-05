@@ -2,8 +2,8 @@ from typing import Any
 
 import motor.motor_asyncio
 
-MONGO_DETAILS = "mongodb://db_user:db_password@localhost:27017"
-DATABASE = "Predictions"
+from src.common.common import settings
+from src.common.schemas import InferenceResult
 
 
 class MongoDBDataAccess:
@@ -15,19 +15,22 @@ class MongoDBDataAccess:
         result = await self.db[collection].insert_one(document)
         return result.inserted_id
 
-    async def find_one(self, collection: str, query):
+    async def find_one(self, collection: str, query) -> InferenceResult:
         result = await self.db[collection].find_one(query)
+        del result["_id"]
         return result
 
-    async def find_many(self, collection: str, query):
-        cursor = self.db[collection].find(query)
-        results = await cursor.to_list(length=None)
-        return results
+    # async def find_many(self, collection: str, query) -> list[dict[Any, Any]]:
+    #     cursor = self.db[collection].find(query)
+    #     results = await cursor.to_list(length=None)
+    #     return results
 
 
 async def get_mongo_db():
-    client = MongoDBDataAccess(MONGO_DETAILS, DATABASE)
-    return client
-    # async with await client.client.start_session() as s:
-    #     async with s.start_transaction():
-    #         yield s
+    try:
+        client = MongoDBDataAccess(settings.MONGO_URI, settings.MONGO_DB_NAME)
+        yield client
+    except Exception:
+        raise Exception
+    finally:
+        client.client.close()

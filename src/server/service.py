@@ -26,7 +26,7 @@ class InferenceService:
     async def publish_to_rabbit(self, message: aio_pika.Message) -> None:
         await self.exchange.publish(message, routing_key=self.routing_key)
 
-    async def send_inference_request(self, image: datastructures.UploadFile):
+    async def send_inference_request(self, image: datastructures.UploadFile) -> str:
         message = await self.prepare_for_message(image)
         inference_request_id = message.headers["request_id"]
         await self.publish_to_rabbit(message)
