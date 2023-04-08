@@ -4,8 +4,9 @@ from functools import partial
 from aio_pika.robust_queue import RobustQueue
 from fastapi import FastAPI
 
-from src.common.common import settings, setup_rabbitmq
-from src.common.database import MongoDBDataAccess, get_mongo_db
+from src.common import settings
+from src.common.rabbit import setup_rabbitmq
+from src.common.database import MongoDBDataAccess
 from src.worker.service import InferenceWorkerService
 
 app = FastAPI()

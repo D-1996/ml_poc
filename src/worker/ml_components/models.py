@@ -22,15 +22,13 @@ class CatsDogsVisionModel:
 
     @staticmethod
     def _load_weights(path: Path, map_location: str = "cpu") -> dict[str, Any]:
-        print(path)
         if not path.exists() or path.suffix != CatsDogsVisionModel.MODEL_EXTENSION:
             raise ValueError(
                 f"Path: {path} does not exist or the file has incorrect extension."
                 f" Expected: {CatsDogsVisionModel.MODEL_EXTENSION}"
             )
 
-        loaded = dict(torch.load(path, map_location=map_location))
-        return loaded
+        return dict(torch.load(path, map_location=map_location))
 
     @staticmethod
     def _get_model_architecture() -> DenseNet:

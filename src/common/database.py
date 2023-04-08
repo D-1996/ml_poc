@@ -2,7 +2,7 @@ from typing import Any
 
 import motor.motor_asyncio
 
-from src.common.common import settings
+from src.common import settings
 from src.common.schemas import InferenceResult
 
 
@@ -19,11 +19,7 @@ class MongoDBDataAccess:
         result = await self.db[collection].find_one(query)
         del result["_id"]
         return result
-
-    # async def find_many(self, collection: str, query) -> list[dict[Any, Any]]:
-    #     cursor = self.db[collection].find(query)
-    #     results = await cursor.to_list(length=None)
-    #     return results
+    
 
 
 async def get_mongo_db():
