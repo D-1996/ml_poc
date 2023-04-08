@@ -2,12 +2,12 @@ from typing import AsyncGenerator
 
 from fastapi import Depends, FastAPI, UploadFile
 
+from src.common import settings
+from src.common.database import MongoDBDataAccess, get_mongo_db
 from src.common.rabbit import setup_rabbitmq
-from src.common.database import get_mongo_db, MongoDBDataAccess
+from src.common.schemas import InferenceResult
 from src.server.schemas import PendingClassification
 from src.server.service import InferenceOrchestratorService
-from src.common.schemas import InferenceResult
-from src.common import settings
 
 app = FastAPI()
 
@@ -25,7 +25,6 @@ async def shutdown_event() -> None:
 
 @app.post("/inference")
 async def predict(image: UploadFile) -> PendingClassification:
-
     inference_service = InferenceOrchestratorService(
         exchange=app.state.inference_request_exchange,
         routing_key=settings.INFERENCE_REQUEST_ROUTING_KEY,
@@ -38,8 +37,9 @@ async def predict(image: UploadFile) -> PendingClassification:
 async def result(
     inference_request_id: str, db: MongoDBDataAccess = Depends(get_mongo_db)
 ) -> InferenceResult:
-    
-    inference_service = InferenceOrchestratorService(collection_name=settings.MONGO_INFERENCE_COLLECTION,database=db)
+    inference_service = InferenceOrchestratorService(
+        collection_name=settings.MONGO_INFERENCE_COLLECTION, database=db
+    )
 
     result = await inference_service.get_result(inference_request_id)
 

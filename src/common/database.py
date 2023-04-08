@@ -19,7 +19,6 @@ class MongoDBDataAccess:
         result = await self.db[collection].find_one(query)
         del result["_id"]
         return result
-    
 
 
 async def get_mongo_db():

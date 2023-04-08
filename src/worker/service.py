@@ -4,10 +4,10 @@ from uuid import uuid4
 from aio_pika import IncomingMessage
 
 from src.common.database import MongoDBDataAccess
+from src.common.schemas import InferenceResult
 from src.worker.ml_components import model, preprocessor
 from src.worker.ml_components.enums import CatsDogsClass
 from src.worker.schemas import ModelPrediction
-from src.common.schemas import InferenceResult
 
 
 class InferenceWorkerService:
@@ -23,7 +23,7 @@ class InferenceWorkerService:
         inference_request_id: str = message.properties.headers["request_id"]
         return InferenceResult(
             inference_id=inference_id,
-            inference_request_id=inference_request_id, 
+            inference_request_id=inference_request_id,
             prediction=ModelPrediction(
                 cat=prediction[CatsDogsClass.CAT], dog=prediction[CatsDogsClass.DOG]
             ),

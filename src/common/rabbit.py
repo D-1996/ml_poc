@@ -2,8 +2,8 @@ import asyncio
 
 import aio_pika
 from fastapi import FastAPI
-from src.common.settings import Settings
 
+from src.common.settings import Settings
 
 
 async def setup_rabbitmq(app: FastAPI, settings: Settings) -> None:
@@ -33,5 +33,3 @@ async def setup_rabbitmq(app: FastAPI, settings: Settings) -> None:
     app.state.rbmq_channel = channel
     app.state.inference_request_exchange = inference_request_exchange
     app.state.inference_request_queue = inference_request_queue
-
-
