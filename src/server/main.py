@@ -1,5 +1,3 @@
-from typing import AsyncGenerator
-
 from fastapi import Depends, FastAPI, UploadFile
 
 from src.common import settings
